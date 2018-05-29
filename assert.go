@@ -1,6 +1,9 @@
 package assert
 
-import "testing"
+import (
+	"runtime"
+	"testing"
+)
 
 // Assert serves as a helper for testing
 type Assert struct {
@@ -25,5 +28,15 @@ func (a *Assert) Equals(k interface{}, m interface{}) {
 func (a *Assert) NotEquals(k interface{}, m interface{}) {
 	if k == m {
 		a.t.Errorf("%v should not equal %v", k, m)
+	}
+}
+
+// HandleError logs error and outputs stacktrace
+func (a *Assert) HandleError(err error) {
+	if err != nil {
+		a.t.Error(err)
+		var buf []byte
+		runtime.Stack(buf, false)
+		a.t.Log(string(buf))
 	}
 }
