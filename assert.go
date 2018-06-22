@@ -1,7 +1,7 @@
 package assert
 
 import (
-	"runtime"
+	"runtime/debug"
 	"testing"
 )
 
@@ -21,6 +21,8 @@ func New(t *testing.T) *Assert {
 func (a *Assert) Equals(k interface{}, m interface{}) {
 	if k != m {
 		a.t.Errorf("%v should equal %v", k, m)
+		buf := debug.Stack()
+		a.t.Log(string(buf))
 	}
 }
 
@@ -28,6 +30,8 @@ func (a *Assert) Equals(k interface{}, m interface{}) {
 func (a *Assert) NotEquals(k interface{}, m interface{}) {
 	if k == m {
 		a.t.Errorf("%v should not equal %v", k, m)
+		buf := debug.Stack()
+		a.t.Log(string(buf))
 	}
 }
 
@@ -35,8 +39,7 @@ func (a *Assert) NotEquals(k interface{}, m interface{}) {
 func (a *Assert) HandleError(err error) {
 	if err != nil {
 		a.t.Error(err)
-		var buf []byte
-		runtime.Stack(buf, false)
+		buf := debug.Stack()
 		a.t.Log(string(buf))
 	}
 }
