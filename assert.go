@@ -3,6 +3,8 @@ package assert
 import (
 	"runtime/debug"
 	"testing"
+
+	"github.com/pkg/errors"
 )
 
 // Assert serves as a helper for testing
@@ -39,7 +41,6 @@ func (a *Assert) NotEquals(k interface{}, m interface{}) {
 func (a *Assert) HandleError(err error) {
 	if err != nil {
 		a.t.Error(err)
-		buf := debug.Stack()
-		a.t.Log(string(buf))
+		a.t.Log(errors.WithStack(err))
 	}
 }
